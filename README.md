@@ -14,4 +14,4 @@ Shinzo is using Contact Form 7 from Wordpress so there's no need to emulate brow
 - selenium
 
 ## TO DO:
-- proxy support
+- ~~proxy support~~
