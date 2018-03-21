@@ -103,6 +103,12 @@ class Raffle(object):
 				req = self.s.post(self.api,headers=headers,data=payload)
 				print(req)
 				print(req.text)
+				#{"into":"#wpcf7-f445-p426-o1","status":"validation_failed","message":"Un ou plusieurs champs contiennent une erreur. Veuillez v\u00e9rifier et essayer \u00e0 nouveau.","invalidFields":[{"into":"span.wpcf7-form-control-wrap.your-email","message":"L'adresse e-mail n'est pas valide.","idref":null}]}
+				jsonn = json.loads(req.text)
+				if(jsonn['status'] == "validation_failed" or jsonn['status'] == "mail_failed"):
+					print("ERROR, CHECK BELOW")
+					print(json['status'])
+					raise Exception('Infos are incorrect or already registered')
 				
 
 if __name__ == "__main__":
@@ -112,7 +118,31 @@ if __name__ == "__main__":
 		{"fname":"pet","lname":"james","mail":"petjames@gmail.com","phone":"+33612334455","birthdate":"01/01/1998","shoesize":"42",},
 		]
 	# catpcha
-
+	proxies = []
+	errors = []
+	index = 0
+	regis = 0
 	for i in accounts:
-
-		ra.register(i)
+		p = random.choice(proxies)
+		proxies.remove(p)
+		print("\n\n-------------------------")
+		print('NEW TASK')
+		print("-------------------------\n")
+		print(i['mail'])
+		if '@' in p:
+			proxy = { 'https' : 'https://{}'.format(p) }
+			log('Using proxy:')
+			print(colored(proxy,'red', attrs=['bold']))
+		else:
+			proxy = {'http':p,
+					'https':p}
+			log('Using proxy:')
+			print(colored(proxy['https'],'red', attrs=['bold']))
+		try:
+			ra.register(i,proxy)
+			regis += 1
+		except:
+			print("Error while registering")
+			errors.append(i)
+		index += 1
+	print(errors)
